@@ -1,6 +1,7 @@
-# JObsDB_HK_Web_Scrap
-> A project to analyze IT job market in Hong Kong by web scraping [hk.jobsdb.com.](https://hk.jobsdb.com/hk?utm_campaign=hk-c-ao-[c]_dbhk_google_all_sem_brand_brand_en_exact_ao&utm_source=google&utm_medium=cpc&utm_term=&pem=google&gclid=Cj0KCQjw_8mHBhClARIsABfFgpgl6mFDkwSQ6cA0qzNhyC_mcrNR1joV9NfHVt-SKniEbKZwVdbx7dQaAmwqEALw_wcB) 
-![jobsdb webpage screenshot](./images/Screenshot(82).png)
+# JObsDB HK Web Scrap
+> A project to analyze **IT job market** in Hong Kong by web scraping [hk.jobsdb.com.](https://hk.jobsdb.com/hk?utm_campaign=hk-c-ao-[c]_dbhk_google_all_sem_brand_brand_en_exact_ao&utm_source=google&utm_medium=cpc&utm_term=&pem=google&gclid=Cj0KCQjw_8mHBhClARIsABfFgpgl6mFDkwSQ6cA0qzNhyC_mcrNR1joV9NfHVt-SKniEbKZwVdbx7dQaAmwqEALw_wcB) 
+
+![jobsdb webpage screenshot](Screenshot(82).png)
 
 ## Introduction
 As IT industry is growing day by day, IT jobs are at high demand of all time. There have many people are interested in getting into the industry but don't know much about the job market.
@@ -12,6 +13,7 @@ To achieve that, we will web scrape the IT job posts on hk.jobsdb.com to find th
 * [Technologies Used](#technologies-used)
 * [Data Collection](#data-collection)
 * [Data Preprocessing](#data-preprocessing)
+* [Analysis](#analysis)
 * [Conclusion](#conclusion)
 * [Challenges](#challenges)
 * [Next Steps](#next-steps)
@@ -28,6 +30,8 @@ To achieve that, we will web scrape the IT job posts on hk.jobsdb.com to find th
 
 ## Data Collection
 We used BeautifulSoup and Requests to do web scrapping. After selecting **Information Technology (IT)** as **Job Function**, we scraped all the job posts URL on each page then scraped information of each job post. 
+
+JobsDB have limitation of only showing job posts for up to last 30 days so we ended up having 7000+ job posts.
 ```
 title.append(job.find("div", {"data-automation":"detailsTitle"}).h1.get_text())
 company.append(job.find("div", {"data-automation":"detailsTitle"}).span.get_text())
@@ -58,13 +62,76 @@ We collected 10 information for our analysis, included:
 - Experience
 - Job Type
 - Industry
+Then put them into a Data Frame and save to csv format for further use.
 
 ## Data Preprocessing
+We first dropped duplicated job posts and Unnamed column. 5322 jobs left after dropping duplicated job posts.
 
-## EDA
+```
+df=df.drop("Unnamed: 0", axis=1)
+df.drop_duplicates(inplace=True)
+```
+Since some of the salaries showed with 'HK$' at the beginning, e.g. **HK$20,000 - HK$25,000/month** or **Above HK$18,000/month**, we needed to extract only digit and calculate the mean if the salary is showed in a range for later analysis.
+
+```
+df["salary"]=df["salary"].apply(lambda x: x.replace(",","").replace("HK$",""))
+df["salary"]=df["salary"].apply(lambda x: "Not Specified" if "Posted" in x else x)
+df["salary"]=df["salary"].apply(lambda x: str(re.search('(\d+)((\s)(-)(\s)(\d+))?',x).group()) if "/" in x else x)
+def average(x):
+    if "-" in x:
+        y = x.split(" - ")
+        z=0
+        for i in y:
+            z+=int(i)
+        return round(z/2)
+    else:
+        return x
+df["salary"]=df["salary"].apply(lambda x: average(x))
+```
+For Posted Date, all started with 'Posted on' so we extracted only the date and turned it into Datetime data type.
+
+```
+df["post_date"]=df["post_date"].apply(lambda x: re.search("\d.+",x).group())
+df['post_date']=pd.to_datetime(df['post_date'])
+```
+Since the main target customers for this project are people who are new to the IT industry, the entry level job market is their main concern. Therefore, we created four columns for better demonstration.
+- intership - Is it an internship or not?
+- ft/pt - Is it a full-time or part-time job?
+- data - Is it a data-related job? (because we are data science student)
+- entry- Is it an entry level job?
+```
+df["internship"]=df["job_type"].apply(lambda x: "1" if "Internship" in x else "0")
+df["ft/pt"]=df["job_type"].apply(lambda x: "p" if "Part Time" in x else "f")
+df["data"]=df["title"].apply(lambda x: "1" if x.lower().find('data') >=0 else "0")
+df["entry"]=df["career_level"].apply(lambda x: "1" if x.lower().find('entry level') >=0 else "0")
+```
+## Analysis
+1. Entry Level jobs
+There had over 30% jobs were classifered as 'entry level' which is a good news for our target customer.
+![entry level ratio]()
+
+2. Internship
+There had 70 internships out of 5322 jobs. It seemed such a small number but consider that 70 internships opened within 30 days is still pretty good.
+![internship number]()
+
+3. Salary
+It showed that the salary of entry level jobs range from HK$13,000 to HK$38,000/month. When the top 3 industries are 'Financial Services', 'Education' and 'Information Technology (IT)'.
+![average salary]()
+
+4. Qualification
+Almost 50% of entry level jobs required a Degree, over 38% accept 'Non-degree Tertiary'.
+![qualification]()
+
+More analyses can find in.
 
 ## Conclusion
+To conclude, we found that IT industry is still growing rapidly when there is no sign of shortage for entry level positions. Also, the industry is competitive with most of the entry level jobs providing over 20k as a minimum. However, even a degree is not a must for entering IT industry, training or education is still recommended to enhance the chance of getting hire. 
 
 ## Challenges
+1. 
+1. web scrap, 
+2. many data not provided, not representatable
 
 ## Next Steps
+1. improve web scrap code. not by indexing, fit for all
+2. find moree website to increase data base for more accurate analysis
