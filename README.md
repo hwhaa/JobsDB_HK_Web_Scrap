@@ -26,7 +26,37 @@ To achieve that, we will web scrape the IT job posts on hk.jobsdb.com to find th
 - Seaborn 0.11.0
 
 ## Data Collection
-We used BeautifulSoup and Requests to do web scrapping. After selecting **Information Technology (IT)** as **Job Function**, we scraped all the job posts URL on each page
+We used BeautifulSoup and Requests to do web scrapping. After selecting **Information Technology (IT)** as **Job Function**, we scraped all the job posts URL on each page then scraped information of each job post. 
+```
+title.append(job.find("div", {"data-automation":"detailsTitle"}).h1.get_text())
+company.append(job.find("div", {"data-automation":"detailsTitle"}).span.get_text())
+
+j_info=job.find_all(class_="FYwKg _11hx2_0")
+info_list=[i.getText() for i in j_info] 
+location.append(info_list[0])
+salary.append(info_list[1])
+post_date.append(info_list[-1])
+
+add_info=job.find_all(class_="FYwKg zoxBO_0")
+add_list=[i.getText() for i in add_info]
+filtered_add_list=add_list[4:12]
+career_level.append(filtered_add_list[1])
+qualification.append(filtered_add_list[3])
+experience.append(filtered_add_list[5])
+job_type.append(filtered_add_list[7])
+industry.append(add_list[-3])
+```
+We collected 10 information for our analysis, included:
+- Job Title
+- Company
+- Location
+- Salary
+- Posted Date
+- Career Level 
+- Qualification
+- Experience
+- Job Type
+- Industry
 
 ## Data Preprocessing
 
