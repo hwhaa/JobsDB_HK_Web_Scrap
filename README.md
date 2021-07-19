@@ -1,11 +1,12 @@
-# JObsDB HK Web Scrap
+# JobsDB HK Web Scrape
 > A project to analyze **IT job market** in Hong Kong by web scraping [hk.jobsdb.com.](https://hk.jobsdb.com/hk?utm_campaign=hk-c-ao-[c]_dbhk_google_all_sem_brand_brand_en_exact_ao&utm_source=google&utm_medium=cpc&utm_term=&pem=google&gclid=Cj0KCQjw_8mHBhClARIsABfFgpgl6mFDkwSQ6cA0qzNhyC_mcrNR1joV9NfHVt-SKniEbKZwVdbx7dQaAmwqEALw_wcB) 
 
 <img src="images/Screenshot%20(82).png">
 
 ## Introduction
-As IT industry is growing day by day, IT jobs are at high demand of all time. There have many people are interested in getting into the industry but don't know much about the job market.
-Therefore, this project is to analyse the Hong Kong IT job market, provide the market information for people who are keen to be a part of the it. 
+As IT industry is growing day by day, IT jobs are at high demand of all time. There have many people are interested in getting into the industry but don't know much about the job market. On the other hand, more academic platforms, training centers are investing in IT related courses.
+
+Therefore, this project is to analyse the Hong Kong IT job market, provide the market insights for people who are keen to be a part of it. 
 To achieve that, we will web scrape the IT job posts on hk.jobsdb.com to find the demand, requirements and salaries of different IT jobs.
 
 ## Table of Contents
@@ -29,9 +30,9 @@ To achieve that, we will web scrape the IT job posts on hk.jobsdb.com to find th
 - Seaborn 0.11.0
 
 ## Data Collection
-We used BeautifulSoup and Requests to do web scrapping. After selecting **Information Technology (IT)** as **Job Function**, we scraped all the job posts URL on each page then scraped information of each job post. 
+We used BeautifulSoup and Requests to do web scraping. After selecting **Information Technology (IT)** as **Job Function**, we scraped all the job posts URL on each page then scraped information of each job post. 
 
-JobsDB have limitation of only showing job posts for up to last 30 days so we ended up having 7000+ job posts.
+JobsDB have limitation of only showing job posts for up to the last 30 days so we ended up having 7000+ job posts.
 ```
 title.append(job.find("div", {"data-automation":"detailsTitle"}).h1.get_text())
 company.append(job.find("div", {"data-automation":"detailsTitle"}).span.get_text())
@@ -62,10 +63,11 @@ We collected 10 information for our analysis, included:
 - Experience
 - Job Type
 - Industry
-Then put them into a Data Frame and save to csv format for further use.
 
 ## Data Preprocessing
-We first dropped duplicated job posts and Unnamed column. 5322 jobs left after dropping duplicated job posts.
+We dropped duplicated job posts and Unnamed column. 
+
+5322 jobs left after dropping duplicated job posts.
 
 ```
 df=df.drop("Unnamed: 0", axis=1)
@@ -105,33 +107,40 @@ df["ft/pt"]=df["job_type"].apply(lambda x: "p" if "Part Time" in x else "f")
 df["data"]=df["title"].apply(lambda x: "1" if x.lower().find('data') >=0 else "0")
 df["entry"]=df["career_level"].apply(lambda x: "1" if x.lower().find('entry level') >=0 else "0")
 ```
+Here is the final data frame:
+
+<img src="images/Screenshot%20(83).png">
+
 ## Analysis
 1. Entry Level jobs
 There had over 30% jobs were classifered as 'entry level' which is a good news for our target customer.
-![entry level ratio]()
+
+<img src="images/Screenshot%20(85).png" width="650" height="600">
 
 2. Internship
 There had 70 internships out of 5322 jobs. It seemed such a small number but consider that 70 internships opened within 30 days is still pretty good.
-![internship number]()
+
+<img src="images/Screenshot%20(90).png" width="750" height="600">
 
 3. Salary
 It showed that the salary of entry level jobs range from HK$13,000 to HK$38,000/month. When the top 3 industries are 'Financial Services', 'Education' and 'Information Technology (IT)'.
-![average salary]()
+
+<img src="images/Screenshot%20(88).png" width="1000" height="800">
 
 4. Qualification
 Almost 50% of entry level jobs required a Degree, over 38% accept 'Non-degree Tertiary'.
-![qualification]()
+
+<img src="images/Screenshot%20(89).png" width="750" height="600">
 
 More analyses can find in.
 
 ## Conclusion
-To conclude, we found that IT industry is still growing rapidly when there is no sign of shortage for entry level positions. Also, the industry is competitive with most of the entry level jobs providing over 20k as a minimum. However, even a degree is not a must for entering IT industry, training or education is still recommended to enhance the chance of getting hire. 
+To conclude, we found that there was no sign of shortage for entry level positions. The market welcome candidates whose are new to the industry and provided enough opportunities. Also, the industry was staying competitive while most of the entry level jobs provided salary over 20k per month. However, even a degree was not a must for entering IT industry, training or education is still recommended in order to enhance the chance of getting hired or landing a better paid job. 
 
 ## Challenges
-1. 
-1. web scrap, 
-2. many data not provided, not representatable
+1. Web Scraping - information provided in each job posts were different. Information mixed up or collected in the wrong columns by using the indexing method so we needed to change them manually sometimes and it's not ideal.
+2. Many data were not provided by the companies which made the analysis not comprehensive and representative enough.
 
 ## Next Steps
-1. improve web scrap code. not by indexing, fit for all
-2. find moree website to increase data base for more accurate analysis
+1. Improve web scraping code to increase efficiency and fit for all job posts.
+2. Web scrape more job hunt websites to increase data base for more accurate analysis.
