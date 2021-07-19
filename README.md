@@ -1,8 +1,7 @@
 # JObsDB HK Web Scrap
 > A project to analyze **IT job market** in Hong Kong by web scraping [hk.jobsdb.com.](https://hk.jobsdb.com/hk?utm_campaign=hk-c-ao-[c]_dbhk_google_all_sem_brand_brand_en_exact_ao&utm_source=google&utm_medium=cpc&utm_term=&pem=google&gclid=Cj0KCQjw_8mHBhClARIsABfFgpgl6mFDkwSQ6cA0qzNhyC_mcrNR1joV9NfHVt-SKniEbKZwVdbx7dQaAmwqEALw_wcB) 
 
-![jobsdb webpage screenshot](http://github.com/JObsDB_HK_Web_Scrap/images/Screenshot(82).png)
-<img src=“https://github.com/JObsDB_HK_Web_Scrap/images/Screenshot(82).png”>
+<img src="images/Screenshot%20(82).png">
 
 ## Introduction
 As IT industry is growing day by day, IT jobs are at high demand of all time. There have many people are interested in getting into the industry but don't know much about the job market.
