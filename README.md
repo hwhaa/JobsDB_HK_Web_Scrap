@@ -132,7 +132,7 @@ Almost 50% of entry level jobs required a Degree, over 38% accept 'Non-degree Te
 
 <img src="images/Screenshot%20(89).png" width="750" height="600">
 
-More analyses can find in.
+More analyses can find in file - **Data cleaning+EDA.ipynb**.
 
 ## Conclusion
 To conclude, we found that there was no sign of shortage for entry level positions. The market welcome candidates whose are new to the industry and provided enough opportunities. Also, the industry was staying competitive while most of the entry level jobs provided salary over 20k per month. However, even a degree was not a must for entering IT industry, training or education is still recommended in order to enhance the chance of getting hired or landing a better paid job. 
