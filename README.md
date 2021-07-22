@@ -23,7 +23,7 @@ To achieve that, we will web scrape the IT job posts on hk.jobsdb.com to find th
 ## Technologies Used
 - Python 3.8.5
 - Pandas 1.1.3
-- Beautifu Soup 4.9.3
+- Beautiful Soup 4.9.3
 - Requests 2.24.0
 - Regex 2020.10.15
 - Matplotlib 3.3.2
